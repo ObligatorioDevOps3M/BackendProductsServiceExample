@@ -1,7 +1,7 @@
 name: api products testing
 on:
     push:
-        branches: [ "main" , "staging" , "develop" ]
+        branches: [ "main" , "staging" , "develop", "feature/*"]
     pull_request:
         branches: [ "main" , "staging" , "develop" ]
 jobs:

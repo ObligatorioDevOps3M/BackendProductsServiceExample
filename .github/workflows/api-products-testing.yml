@@ -19,8 +19,6 @@ jobs:
           run: mvn -B package --file pom.xml
         - name: Build the Docker image
           run: docker build . --file Dockerfile --tag products-service-example:$(date +%s)
-        - name: Run the Docker container
-          run: docker run -d -p 8080:8080 products-service-example:$(date +%s)
         - run: npm install -g newman
         - run: newman run ./tests/products-service.postman_collection.json
 

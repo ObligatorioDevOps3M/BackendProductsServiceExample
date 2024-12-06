@@ -59,7 +59,7 @@ jobs:
     - name: Build and push Docker image
       env:
          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-         IMAGE_TAG: latest
+         IMAGE_TAG: develop
       run: |
         BRANCH_NAME=${GITHUB_REF##*/}
           if [[ "$BRANCH_NAME" == "main" ]]; then

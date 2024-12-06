@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: products
-        image: 140598534703.dkr.ecr.us-east-1.amazonaws.com/ecr_obligatorio_develop:latest
+        image: 140598534703.dkr.ecr.us-east-1.amazonaws.com/ecr_products:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

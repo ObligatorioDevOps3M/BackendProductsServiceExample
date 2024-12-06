@@ -72,7 +72,7 @@ jobs:
             CUSTOM_ENV_VAR="develop"
             echo "ENVIROMENT_NAME=develop" >> $GITHUB_ENV
           fi
-        VALUE=$(cat devops-repo-directory/terraform/options-${CUSTOM_ENV_VAR}/ecr_repository_uri.txt)
+        VALUE=$(cat devops-repo-directory/terraform/options-${CUSTOM_ENV_VAR}/ecr_repository_uri_products.txt)
         REPOSITORY_URI=$VALUE 
 
         docker build . --file Dockerfile --tag $VALUE:$IMAGE_TAG

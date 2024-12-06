@@ -4,9 +4,8 @@ metadata:
   name: products
   labels: 
      app: products
-
 spec:
-  replicas: 1 
+  replicas: 2
   selector:
     matchLabels:
       app: products
@@ -18,8 +17,7 @@ spec:
     spec:
       containers:
       - name: products
-      #Parametrizar:
-        image: 198937174082.dkr.ecr.us-east-1.amazonaws.com/products:latest
+        image: REPOSITORY_URI:TAG_PLACEHOLDER
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

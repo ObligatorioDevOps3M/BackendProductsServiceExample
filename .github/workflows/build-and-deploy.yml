@@ -91,7 +91,7 @@ jobs:
     - name: Get service URL
       id: get-service-url
       run: |
-        SERVICE_URL=$(kubectl get svc -o json | jq -r '.items[] select(.metadata.name | test("products-service")) | .status.loadBalancer.ingress[0].hostname')
+        SERVICE_URL=$(kubectl get svc -o json | jq ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
         echo "El valor de mi variable es: $SERVICE_URL"
         echo $SERVICE_URL > service-url.txt
 

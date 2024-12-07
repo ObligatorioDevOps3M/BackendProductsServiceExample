@@ -92,7 +92,7 @@ jobs:
       id: get-service-url
       run: |
         if [ -f "devops-repo-directory/terraform/options-develop/service-url-products.txt" ]; then
-            echo "FILE_EXIST=true" >> $GITHUB_ENV
+            echo "FILE_EXISTS=true" >> $GITHUB_ENV
           else
             SERVICE_URL=$(kubectl get svc -o json | jq -r ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
             echo "El valor de mi variable es: $SERVICE_URL"

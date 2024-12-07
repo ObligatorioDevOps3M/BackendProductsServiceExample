@@ -75,8 +75,8 @@ jobs:
         VALUE=$(cat devops-repo-directory/terraform/options-${CUSTOM_ENV_VAR}/ecr_repository_uri_products.txt)
         REPOSITORY_URI=$VALUE 
 
-        docker build . --file Dockerfile --tag $VALUE:$ENVIROMENT_NAME
-        docker push $VALUE:$ENVIROMENT_NAME
+        docker build . --file Dockerfile --tag $VALUE:${{ env.ENVIROMENT_NAME }}
+        docker push $VALUE:${{ env.ENVIROMENT_NAME }}
    
   # Deploy de la aplicacion en AWS EKS
   ## Parametrizar:

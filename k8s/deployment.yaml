@@ -17,6 +17,7 @@ spec:
     spec:
       containers:
       - name: products
+      #Parametrizar
         image: 140598534703.dkr.ecr.us-east-1.amazonaws.com/ecr_products:develop
         imagePullPolicy: Always
         ports:

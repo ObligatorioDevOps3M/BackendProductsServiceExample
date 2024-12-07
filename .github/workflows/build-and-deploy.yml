@@ -80,11 +80,32 @@ jobs:
    
   # Deploy de la aplicacion en AWS EKS
   ## Parametrizar:
-      ## --archivos deployment.yaml y service.yaml en DevOps?
     - name: Deploy Application to EKS
       run: |
         aws eks --region us-east-1 update-kubeconfig --name cluster_obligatorio_${{env.ENVIROMENT_NAME}}
         kubectl apply -f k8s/deployment.yaml
         kubectl apply -f k8s/service.yaml
 
+  # Obtener y guardar la URL del servicio
+    - name: Get service URL
+      id: get-service-url
+      run: |
+        SERVICE_NAME=$(kubectl get svc -o jsonpath='{.items[0].metadata.name}')
+        SERVICE_URL=$(kubectl get svc $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
+        echo "SERVICE_URL=$SERVICE_URL" >> $GITHUB_ENV
+        echo $SERVICE_URL > service-url.txt
+        cat service-url.txt
 
+ # Guardar el archivo en el repositorio DevOps
+    #- name: Commit and push service-url.txt to DevOps repo
+     # run: |
+      #  cd devops-repo-directory
+      #  mv ../service-url.txt .
+      #  git config --global user.name "github-actions[bot]"
+      #  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #  git add service-url.txt
+      #  git commit -m "Update service URL"
+      #  git push origin main
+      #env:
+      #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

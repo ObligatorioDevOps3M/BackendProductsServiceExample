@@ -83,7 +83,7 @@ jobs:
   ## Parametrizar:
     - name: Deploy Application to EKS
       run: |
-        aws eks --region us-east-1 update-kubeconfig --name cluster_obligatorio_${{env.ENVIROMENT_NAME}}
+        aws eks --region us-east-1 update-kubeconfig --name cluster_obligatorio_${{ env.ENVIROMENT_NAME }}
         kubectl apply -f k8s/deployment.yaml
         kubectl apply -f k8s/service.yaml
 
@@ -91,20 +91,27 @@ jobs:
     - name: Get service URL
       id: get-service-url
       run: |
-        SERVICE_URL=$(kubectl get svc -o json | jq -r ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
-        echo "El valor de mi variable es: $SERVICE_URL"
-        echo "http://$SERVICE_URL:8080/products" > service-url-products.txt
+        if [ -f "devops-repo-directory/terraform/options-develop/service-url-products.txt" ]; then
+            echo "FILE_EXIST=true" >> $GITHUB_ENV
+          else
+            SERVICE_URL=$(kubectl get svc -o json | jq -r ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
+            echo "El valor de mi variable es: $SERVICE_URL"
+            echo "http://$SERVICE_URL:8080/products" > service-url-products.txt
+            exit 1
+          fi
+        
 
  # Guardar el archivo en el repositorio DevOps
- 
+
     - name: Commit and push service-url.txt to DevOps repo
       run: |
-        cd devops-repo-directory/terraform/options-develop
-        mv ../../../service-url-products.txt .
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add service-url-products.txt
-        git commit -m "Update service URL"
-        git push origin main
+        if [ "${{ env.FILE_EXISTS }}" != "true" ]; then
+          cd devops-repo-directory/terraform/options-develop
+          mv ../../../service-url-products.txt .
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add service-url-products.txt
+          git commit -m "Update service URL"
+          git push origin main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

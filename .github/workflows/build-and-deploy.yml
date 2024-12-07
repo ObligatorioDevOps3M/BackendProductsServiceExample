@@ -32,6 +32,21 @@ jobs:
   # Build con Maven
     - name: Build and Test with Maven
       run: mvn -B package --file pom.xml
+    
+  # Identificacion de entorno
+    - name: Set Environment
+      run: |
+        BRANCH_NAME=${GITHUB_REF##*/}
+        if [[ "$BRANCH_NAME" == "main" ]]; then
+          CUSTOM_ENV_VAR="main"
+          echo "ENVIROMENT_NAME=production" >> $GITHUB_ENV
+        elif [[ "$BRANCH_NAME" == staging ]]; then
+          CUSTOM_ENV_VAR="staging"
+          echo "ENVIROMENT_NAME=staging" >> $GITHUB_ENV
+        else
+          CUSTOM_ENV_VAR="develop"
+          echo "ENVIROMENT_NAME=develop" >> $GITHUB_ENV
+        fi
 
   # Repo DevOps    
     - name: Checkout external repository
@@ -61,18 +76,7 @@ jobs:
       env:
          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        BRANCH_NAME=${GITHUB_REF##*/}
-          if [[ "$BRANCH_NAME" == "main" ]]; then
-            CUSTOM_ENV_VAR="main"
-            echo "ENVIROMENT_NAME=production" >> $GITHUB_ENV
-          elif [[ "$BRANCH_NAME" == staging ]]; then
-            CUSTOM_ENV_VAR="staging"
-            echo "ENVIROMENT_NAME=staging" >> $GITHUB_ENV
-          else
-            CUSTOM_ENV_VAR="develop"
-            echo "ENVIROMENT_NAME=develop" >> $GITHUB_ENV
-          fi
-        VALUE=$(cat devops-repo-directory/terraform/options-${CUSTOM_ENV_VAR}/ecr_repository_uri_products.txt)
+        VALUE=$(cat devops-repo-directory/terraform/options-${{ env.ENVIROMENT_NAME }}/ecr_repository_uri_products.txt)
         REPOSITORY_URI=$VALUE 
 
         docker build . --file Dockerfile --tag $VALUE:${{ env.ENVIROMENT_NAME }}

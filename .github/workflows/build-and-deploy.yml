@@ -97,8 +97,7 @@ jobs:
             SERVICE_URL=$(kubectl get svc -o json | jq -r ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
             echo "El valor de mi variable es: $SERVICE_URL"
             echo "http://$SERVICE_URL:8080/products" > service-url-products.txt
-            exit 1
-          fi
+        fi
         
 
  # Guardar el archivo en el repositorio DevOps
@@ -113,5 +112,6 @@ jobs:
           git add service-url-products.txt
           git commit -m "Update service URL"
           git push origin main
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

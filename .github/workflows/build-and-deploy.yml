@@ -93,7 +93,7 @@ jobs:
       run: |
         SERVICE_URL=$(kubectl get svc -o json | jq -r ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
         echo "El valor de mi variable es: $SERVICE_URL"
-        echo "http://$SERVICE_URL:8080" > service-url.txt
+        echo "http://$SERVICE_URL:8080/products" > service-url.txt
 
  # Guardar el archivo en el repositorio DevOps
     - name: Commit and push service-url.txt to DevOps repo

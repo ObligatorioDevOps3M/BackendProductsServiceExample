@@ -60,7 +60,6 @@ jobs:
     - name: Build and push Docker image
       env:
          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-         IMAGE_TAG: develop
       run: |
         BRANCH_NAME=${GITHUB_REF##*/}
           if [[ "$BRANCH_NAME" == "main" ]]; then
@@ -76,8 +75,8 @@ jobs:
         VALUE=$(cat devops-repo-directory/terraform/options-${CUSTOM_ENV_VAR}/ecr_repository_uri_products.txt)
         REPOSITORY_URI=$VALUE 
 
-        docker build . --file Dockerfile --tag $VALUE:$IMAGE_TAG
-        docker push $VALUE:$IMAGE_TAG
+        docker build . --file Dockerfile --tag $VALUE:${{ env.ENVIROMENT_NAME }}
+        docker push $VALUE:${{ env.ENVIROMENT_NAME }}
    
   # Deploy de la aplicacion en AWS EKS
   ## Parametrizar:
@@ -91,7 +90,7 @@ jobs:
     - name: Get service URL
       id: get-service-url
       run: |
-        if [ -f "devops-repo-directory/terraform/options-develop/service-url-products.txt" ]; then
+        if [ -f "devops-repo-directory/terraform/options-${{ env.ENVIROMENT_NAME }}/service-url-products.txt" ]; then
             echo "FILE_EXISTS=true" >> $GITHUB_ENV
           else
             SERVICE_URL=$(kubectl get svc -o json | jq -r ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
@@ -105,7 +104,7 @@ jobs:
     - name: Commit and push service-url.txt to DevOps repo
       run: |
         if [ "${{ env.FILE_EXISTS }}" != "true" ]; then
-          cd devops-repo-directory/terraform/options-develop
+          cd devops-repo-directory/terraform/options-${{ env.ENVIROMENT_NAME }}
           mv ../../../service-url-products.txt .
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

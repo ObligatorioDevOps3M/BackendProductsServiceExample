@@ -78,16 +78,21 @@ jobs:
       run: |
         VALUE=$(cat devops-repo-directory/terraform/options-${{ env.ENVIROMENT_NAME }}/ecr_repository_uri_products.txt)
         REPOSITORY_URI=$VALUE 
-
+        echo "IMAGE_NAME=$VALUE:${{ env.ENVIROMENT_NAME }}" >> $GITHUB_ENV
         docker build . --file Dockerfile --tag $VALUE:${{ env.ENVIROMENT_NAME }}
         docker push $VALUE:${{ env.ENVIROMENT_NAME }}
-   
+
+        
+    - name: Update deployment.yaml with image name
+      run: |
+        envsubst < k8s/deployment.yaml > k8s/deployment-updated.yaml
+
   # Deploy de la aplicacion en AWS EKS
   ## Parametrizar:
     - name: Deploy Application to EKS
       run: |
         aws eks --region us-east-1 update-kubeconfig --name cluster_obligatorio_${{ env.ENVIROMENT_NAME }}
-        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/deployment-updated.yaml
         kubectl apply -f k8s/service.yaml
 
   # Obtener y guardar la URL del servicio

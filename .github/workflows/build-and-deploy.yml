@@ -96,6 +96,7 @@ jobs:
         echo "http://$SERVICE_URL:8080/products" > service-url-products.txt
 
  # Guardar el archivo en el repositorio DevOps
+ 
     - name: Commit and push service-url.txt to DevOps repo
       run: |
         cd devops-repo-directory/terraform/options-develop

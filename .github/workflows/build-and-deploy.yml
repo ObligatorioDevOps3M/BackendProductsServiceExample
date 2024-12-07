@@ -93,16 +93,16 @@ jobs:
       run: |
         SERVICE_URL=$(kubectl get svc -o json | jq -r ".items[] | select(.metadata.name | test(\"products-service\")) | .status.loadBalancer.ingress[0].hostname")
         echo "El valor de mi variable es: $SERVICE_URL"
-        echo "http://$SERVICE_URL:8080/products" > service-url.txt
+        echo "http://$SERVICE_URL:8080/products" > service-url-products.txt
 
  # Guardar el archivo en el repositorio DevOps
     - name: Commit and push service-url.txt to DevOps repo
       run: |
         cd devops-repo-directory/terraform/options-develop
-        mv ../../../service-url.txt .
+        mv ../../../service-url-products.txt .
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add service-url.txt
+        git add service-url-products.txt
         git commit -m "Update service URL"
         git push origin main
       env:

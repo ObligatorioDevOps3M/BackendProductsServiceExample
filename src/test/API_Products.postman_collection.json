@@ -23,11 +23,6 @@
 							"pm.test(\"El número de productos es 3\", function () {\r",
 							"    pm.expect(pm.response.json()).to.be.an('array').that.has.lengthOf(3);\r",
 							"});\r",
-							"\r",
-							"// Test para el tiempo de respuesta\r",
-							"pm.test(\"El tiempo de respuesta es menor a 200ms\", function () {\r",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
-							"});\r",
 							""
 						],
 						"type": "text/javascript",

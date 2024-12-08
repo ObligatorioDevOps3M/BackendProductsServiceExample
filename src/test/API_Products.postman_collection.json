@@ -4,11 +4,45 @@
 		"name": "API_Products",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "8226521",
-		"_collection_link": "https://proyecto-final-ort-orue-rivero.postman.co/workspace/ObligatorioDevOps3M~6795b0df-c2ae-4e20-b455-acd598172048/collection/8226521-3937e9b1-6bc2-4cfd-9f0b-83d80fd1fbd3?action=share&source=collection_link&creator=8226521"
+		"_collection_link": "https://proyecto-final-ort-orue-rivero.postman.co/workspace/6795b0df-c2ae-4e20-b455-acd598172048/collection/8226521-3937e9b1-6bc2-4cfd-9f0b-83d80fd1fbd3?action=share&source=collection_link&creator=8226521"
 	},
 	"item": [
 		{
 			"name": "Obtener productos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test para el código de estado\r",
+							"pm.test(\"El código de estado es 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test para las propiedades del cuerpo de la respuesta\r",
+							"pm.test(\"El cuerpo de la respuesta tiene las propiedades 'id', 'name', 'stock' y 'description'\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property('id');\r",
+							"    pm.expect(pm.response.json()).to.have.property('name');\r",
+							"    pm.expect(pm.response.json()).to.have.property('stock');\r",
+							"    pm.expect(pm.response.json()).to.have.property('description');\r",
+							"});\r",
+							"\r",
+							"// Test para el número de productos en la respuesta\r",
+							"pm.test(\"El número de productos es 3\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('array').that.has.lengthOf(3);\r",
+							"});\r",
+							"\r",
+							"// Test para el tiempo de respuesta\r",
+							"pm.test(\"El tiempo de respuesta es menor a 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
